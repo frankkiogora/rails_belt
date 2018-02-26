@@ -1,0 +1,86 @@
+<div class="container">
+
+    <div class="table_header ">
+        <h2>Hello, <%= current_user.first_name %> <%= current_user.last_name %>!</h2>
+        <h4>All the songs in our hub:</h4>
+    </div>
+
+    <table class="table table-hover">
+      <thead style="color:green">
+        <tr>
+          <th >Artist name</th>
+          <th>Title of song</th>
+          <th>Number of additions</th>
+          <th>Add to Playlist</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% if @songs %>
+      <% @songs.each do |song| %>
+        <tr>
+          <td><%= song.artist %></td>
+          <td><a href="/songs/<%= song.id %>"><%= song.title %></a></td>
+          <td><%= song.playlists.sum(:add_count) %></td>
+          <td>
+          <form method='post' action='/playlists/<%= song.id %>'>
+            <input type="hidden" name="_method" value="patch">
+            <input type='hidden' name="authenticity_token" value='<%= form_authenticity_token %>'>
+          <input class="btn btn-success" type='submit' value='Add'>
+          </form>
+          <% if flash[:add_error] %>
+          <% flash[:add_error].each do |field,value| %>
+              <% value.each do |error| %>
+                  <span class='small text-danger'><%= field.capitalize %> <%= error %> : </span>
+              <% end %>
+          <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+      <% end %>
+      </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h4> Add a song :</h4>
+
+    <form method='post' action='/songs'>
+        <input type='hidden' name="authenticity_token" value='<%= form_authenticity_token %>'>
+
+    <!--      Title      -->
+
+        <div class="form-group <%= flash[:hasError] %>">
+            <label class="control-label" for='last_name'>Title :</label>
+            <input type='text' name='song[title]' >
+            <% if flash[:add_song] %>
+            <% flash[:add_song].each do |field,value| %>
+                <% if field=='title' %>
+                <% value.each do |error| %>
+                    <span class='small text-danger'><%= field.capitalize %> <%= error %> : </span>
+                <% end %>
+                <% end %>
+            <% end %>
+            <% end %>
+        </div>
+
+    <!--      Artist      -->
+
+        <div class="form-group <%= flash[:hasError] %>">
+            <label class="control-label" for='last_name'>Artist :</label>
+            <input type='text' name='song[artist]' >
+
+            <% if flash[:add_song] %>
+            <% flash[:add_song].each do |field,value| %>
+                <% if field=='artist' %>
+                <% value.each do |error| %>
+                    <span class='small text-danger'><%= field.capitalize %> <%= error %> : </span>
+                <% end %>
+                <% end %>
+            <% end %>
+            <% end %>
+        </div>
+
+        <input class="btn btn-success" type='submit' value='Add Song'>
+    </form>
+</div>
+

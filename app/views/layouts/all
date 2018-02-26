@@ -1,0 +1,41 @@
+  <form action="/main/<%=current_user.id%>" method="post">
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    <input type="hidden" name="_method" value="delete">
+    <input type="text" name="song[artist]" placeholder="">
+    <input type="submit" value="Add Song">
+  </form>
+
+
+    <form method='post' action='/songs'>
+        <input type='hidden' name="authenticity_token" value='<%= form_authenticity_token %>'>
+        
+        <div class="form-group <%= flash[:hasError] %>">
+        <label class="control-label" for='last_name'>Artist :</label>
+        <input class="form-control"  type='text' name='song[artist]' placeholder=''>
+        <% if flash[:add_song] %>
+        <% flash[:add_song].each do |field,value| %>
+            <% if field=='artist' %>
+            <% value.each do |error| %>
+                <span class='small text-danger'><%= field.capitalize %> <%= error %> : </span>
+            <% end %>
+            <% end %>
+        <% end %>
+        <% end %>
+        </div>
+
+         <div class="form-group <%= flash[:hasError] %>">
+        <label class="control-label" for='last_name'>Title :</label>
+        <input class="form-control"  type='text' name='song[title]' placeholder=''>
+        <% if flash[:add_song] %>
+        <% flash[:add_song].each do |field,value| %>
+            <% if field=='title' %>
+            <% value.each do |error| %>
+                <span class='small text-danger'><%= field.capitalize %> <%= error %> : </span>
+            <% end %>
+            <% end %>
+        <% end %>
+        <% end %>
+        </div>
+
+        <input class="btn btn-primary" type='submit' value='Add Song'>
+    </form>

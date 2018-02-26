@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The Dojo music hub </title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<% if flash[:errors] %>
+  <% flash[:errors].each do |e| %>
+    <%= e %>
+  <% end %>
+<% end %>
+
+<% if current_user %>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+  <div class="container">
+  <div class="navbar-header">
+    <a class="navbar-brand" href="/">The dojo music hub</a>
+  </div>
+  <ul class="nav navbar-nav navbar-right">
+    <% if request.original_fullpath() != "/songs" %>
+    <li><a href="/songs"> Dashboard << </a></li>
+    <% end %>
+    <li><a href="/main/<%=current_user.id%>" data-method="delete">Log Out</a></li>
+  </ul>
+  </div>
+</nav>
+<% end %> 
+<div>
+  <%= yield %>
+</div>
+
+
+</body>
+</html>
